@@ -16,7 +16,12 @@ pipeline {
 		}
 		stage ('Web Page Status'){
 			steps {
-				sh 'curl http://static-jerkins-pipeline.s3-website-us-west-2.amazonaws.com -s -f -o /dev/null || echo "Website Down!"'
+				timeout(time:10, unit:'SECONDS'){
+					retry(3){
+						sh 'curl http://static-jerkins-pipeline.s3-website-us-west-2.amazonaws.com -s -f -o /dev/null || echo "Website Down!"'
+					}
+				}
+				
 			}
 		}
 	}
